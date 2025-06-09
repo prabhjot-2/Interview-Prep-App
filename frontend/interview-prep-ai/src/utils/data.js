@@ -1,4 +1,4 @@
-export const APi_FEATURES=[
+export const APP_FEATURES=[
     {
         id:"01",
         title:" Tailored just for you",
@@ -6,7 +6,7 @@ export const APi_FEATURES=[
     },
     {
         id:"02",
-        title:" learn at your own pace",
+        title:" Learn at your own pace",
         description:"Expand answers only when ur ready. Dive deeper into any concepts instatntly with our AI-powered explanations and examples."
     },
     {
