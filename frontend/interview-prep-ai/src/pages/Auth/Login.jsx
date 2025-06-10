@@ -12,6 +12,26 @@ const Login = ({ setCurrentPage }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     // Your login logic here
+
+    if(!validateEmail(email)){
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if(!password){
+      setError("Password cannot be empty.");
+      return;
+    }
+    setError("");
+
+    // login Api call
+    try {
+    } catch (err) {
+      if(err.response && err.response.data.message){
+        setError(err.response.data.message);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
   };
 
   return (
