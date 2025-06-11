@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Input/Input';
 import ProfilePhotoSelector from '../../components/Input/ProfilePhotoSelector';
+import { validateEmail } from '../../utils/helper';
 
 const SignUp = ({setCurrentPage}) => {
   const[profilePic,setProfilePic]=useState(null);
@@ -14,6 +15,32 @@ const SignUp = ({setCurrentPage}) => {
   // handle signup form submit
   const handleSignUp=async(e)=>{
     e.preventDefault();
+    let profileImageUrl="";
+    if(!fullName){
+      setError("please enter full name")
+      return
+    }
+
+    if(!validateEmail(email)){
+      setError("please neter a valid email address");
+      return;
+    }
+    if(!password){
+      setError("please enter the password")
+      return
+    }
+
+    setError("")
+
+    // ?signup Api call
+    try {
+    } catch (err) {
+      if(err.response && err.response.data.message){
+        setError(err.response.data.message);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
   }
   return <div className='w-[90vw] md:w-[33vw] p-7 flex flex-col justify-center'>
     <h3 className='text-lg font-semibold text-black '> Create an Account</h3>
