@@ -12,4 +12,4 @@ const sessionSchema=new mongoose.Schema(
     {timeStamps:true}
 );
 
-module.exports=mongoose.model("User",sessionSchema);
+module.exports=mongoose.model("Session",sessionSchema);

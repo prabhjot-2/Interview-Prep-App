@@ -8,7 +8,7 @@ exports.addQuestionsToSession=async(req,res)=>{
     try{
         const {sessionId,questions}=req.body;
 
-        if(!sessionId || !qustions || !Array.isArray(questions)){
+        if(!sessionId || !questions || !Array.isArray(questions)){
             return res.status(400).json({message:"Invalid input data "})
         }
         const session=await Session.findById(sessionId);
@@ -18,7 +18,7 @@ exports.addQuestionsToSession=async(req,res)=>{
         }
 
         // create new Questions
-        const createQuestions=await Question.insertMany(
+        const createdQuestions=await Question.insertMany(
             questions.map((q)=>({
                 session:sessionId,
                 question:q.question,
@@ -26,9 +26,9 @@ exports.addQuestionsToSession=async(req,res)=>{
             }))
         )
         // update session to include new questions IDS
-        session.questions.push(...createQuestions.map((q)=>q._id));
+        session.questions.push(...createdQuestions.map((q)=>q._id));
         await session.save();
-        res.status(201).json(createQuestions);
+        res.status(201).json(createdQuestions);
     }catch(error){
         res.status(500).json({message:"Server Error"});
     }
