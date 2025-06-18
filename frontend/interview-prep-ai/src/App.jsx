@@ -5,10 +5,12 @@ import {Toaster} from "react-hot-toast";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Home/DashBoard";
 import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
+import UserProvider from './context/UserContext';
 
 const App = () => {
   return (
-    <div className='text-5xl'>
+    <UserProvider>
+    <div>
       <Router>
         <Routes>
           {/* {default route} */}
@@ -28,6 +30,7 @@ const App = () => {
         }}
         />
     </div>
+    </UserProvider>
   )
 }
 
