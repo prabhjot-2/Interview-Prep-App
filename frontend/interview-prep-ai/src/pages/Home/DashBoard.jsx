@@ -8,10 +8,12 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import moment from "moment"
 import SummaryCard from '../../components/Cards/SummaryCard';
+import Modal from '../../components/Modal';
+import CreateSessionForm from './CreateSessionForm';
 const DashBoard = () => {
   const navigate=useNavigate();
 
-  const [openCreateModal,setOpnCreateModal]=useState(false);
+  const [openCreateModal,setOpenCreateModal]=useState(false);
   const [sessions,setSessions]=useState([]);
 
   const [openDeleteAlert,setOpenDeleteAlert]=useState({
@@ -57,12 +59,24 @@ const DashBoard = () => {
         </div>
         <button 
           className='h-12 md:h-12 flex items-center justify-center gap-3 bg-linear-to-r from-[#FF9324] to-[e99a4b] text-sm font-semibold text-white px-7 py-2.5 rounded-full hover:bg-black hover:text-white transition-colors cursor-pointer hover:shadow-2xl hover:shadow-orange-300 fixed bottom-10 md:bottom-20 right-10 md:right-20'
-          onClick={()=>setOpnCreateModal(true)}  
+          onClick={()=>setOpenCreateModal(true)}  
         >
           <LuPlus className='text-2xl text-white'/>
           Add new
         </button>
       </div>
+
+      <Modal
+        isOpen={openCreateModal}
+        onClose={()=>{
+          setOpenCreateModal(false)
+        }}
+        hideHeader
+      >
+        <div>
+          <CreateSessionForm/>
+        </div>
+      </Modal>
     </DashboardLayout>
   )
 }
