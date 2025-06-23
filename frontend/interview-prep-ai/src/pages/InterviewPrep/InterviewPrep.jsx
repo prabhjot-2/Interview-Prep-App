@@ -5,11 +5,13 @@ import { useParams } from 'react-router-dom'
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import moment from 'moment';
 import RoleInfoHeader from './components/RoleInfoHeader';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 
 const InterviewPrep = () => {
   const {sessionId}=useParams();
 
-  const [sessionData,setSessionSata]=useState(null);
+  const [sessionData,setSessionData]=useState(null);
   const[errorMsg,setErrorMsg]=useState("");
 
   const [openLearnMoreDrawer, setOpenLearnDrawer]=useState(false);
@@ -19,7 +21,17 @@ const InterviewPrep = () => {
   const [isUpdateLoader,setIsUpdateLoader]=useState(false);
 
   // fetch session data byy session id
-  const fetchSessionDetailsById=async()=>{};
+  const fetchSessionDetailsById=async()=>{
+    try{
+      const response =await axiosInstance.get(API_PATHS.SESSION.GET_ONE(sessionId));
+
+      if(response.data && response.data.session){
+        setSessionData(response.data.session);
+      }
+    }catch(error){
+      console.error("Error:",error);
+    }
+  };
   
   // generate concept explanation
   const generateConceptExplanation=async(question)=>{}
