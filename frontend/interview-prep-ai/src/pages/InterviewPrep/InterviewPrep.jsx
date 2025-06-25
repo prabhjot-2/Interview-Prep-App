@@ -8,7 +8,8 @@ import RoleInfoHeader from './components/RoleInfoHeader';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import QuestionCard from '../../components/Cards/QuestionCard';
-import { LuCircleAlert } from 'react-icons/lu';
+import { LuCircleAlert, LuListCollapse } from 'react-icons/lu';
+import toast from 'react-hot-toast';
 import AIResponsePreview from './components/AIResponsePreview';
 import Drawer from '../../components/Drawer';
 import axios from 'axios';
@@ -81,7 +82,45 @@ const InterviewPrep = () => {
   }
 
   // addd more question to session
-  const uploadMoreQuestions=async()=>{};
+  const uploadMoreQuestions=async()=>{
+    try{
+      setIsUpdateLoader(true)
+
+      // call ai api to generate questions
+      const aiResponse=await axiosInstance.post(
+        API_PATHS.AI.GENERATE_QUESTIONS,
+        {
+          role:sessionData?.role,
+          experience:sessionData?.experience,
+          topicsToFocus:sessionData?.topicsToFocus,
+          numberOfQuestions:10,
+        }
+      );
+      // should be array like [{questions, answer ...}]
+      const generatedQuestions=aiResponse.data;
+
+      const response=await axiosInstance.post(
+        API_PATHS.QUESTION.ADD_TO_SESSION,
+        {
+          sessionId,
+          questions:generatedQuestions,
+        }
+      );
+
+      if(response.data){
+        toast.success("Adde more Q&A");
+        fetchSessionDetailsById();
+      }
+    }catch(error){
+      if(error.response && error.response.data.message){
+        setError(error.response.data.message)
+      }else{
+        setError("something went wrong. Please try again");
+      }
+    }finally{
+      setIsUpdateLoader(false)
+    }
+  };
 
   useEffect(()=>{
     if(sessionId){
@@ -133,7 +172,26 @@ const InterviewPrep = () => {
                           isPinned={data?.isPinned}
                           onTogglePin={()=>toggleQuestionPinStatus(data._id)}
                         />
-                      </>
+                      
+
+                      {!isLoading && 
+                        sessionData?.questions?.length== index+1 &&(
+                          <div className='flex items-center justify-center mt-5'>
+                            <button 
+                              className='flex items-center gap-3 text-sm text-white font-medium bg-balck px-5 py-2 mr-2 rounded text-nowrap cursor-pointer'
+                              disabled={isLoading || isUpdateLoader}
+                              onClick={uploadMoreQuestions}>
+                                {isUpdateLoader ? (
+                                  <SpinnerLoader/>
+                                ):(
+                                  <LuListCollapse className='text-lg'/>
+                                )}{""}
+                                  Load More
+                              </button>
+                          </div>
+                        )
+                        }
+                        </>
                     </motion.div>
                 );
               })}
