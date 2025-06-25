@@ -5,6 +5,7 @@ import ProfilePhotoSelector from '../../components/Input/ProfilePhotoSelector';
 import { validateEmail } from '../../utils/helper';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
+import uploadImage from '../../utils/uploadImage';
 
 const SignUp = ({setCurrentPage}) => {
   const[profilePic,setProfilePic]=useState(null);
@@ -70,7 +71,7 @@ const SignUp = ({setCurrentPage}) => {
       Join us Today by entering your details below
     </p>
 
-    <form onSubmit={handleSignUp}>
+    <form onSubmit={handleSignUp} autoComplete="off">
 
       <ProfilePhotoSelector image={profilePic} setImage={setProfilePic}/>
 
@@ -107,13 +108,15 @@ const SignUp = ({setCurrentPage}) => {
       <p className='text-[13px] text-slate-800 mt-3 '>
         Already an Account?{""}
         <button
-          className='font-medium text-primary underline cursor-pointer'
-          onClick={()=>{
-            setCurrentPage("login");
-          }}
-          >
-            Login
-          </button>
+  type="button"
+  className='font-medium text-primary underline cursor-pointer'
+  onClick={() => {
+    setCurrentPage("login");
+  }}
+>
+  Login
+</button>
+
       </p>
     </form>
   </div>

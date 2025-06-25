@@ -56,7 +56,7 @@ const Login = ({ setCurrentPage }) => {
         Please Enter your details to log in
       </p>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} autoComplete="off">
         <Input
           value={email}
           onChange={({ target }) => setEmail(target.value)}

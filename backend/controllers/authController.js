@@ -15,7 +15,6 @@ const registerUser = async (req, res) => {
   try {
     const { name, email, password, profileImageUrl } = req.body;
 
-    // check if user is already exist
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
@@ -24,7 +23,6 @@ const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    // create new user
     const user = await User.create({
       name,
       email,
@@ -32,7 +30,6 @@ const registerUser = async (req, res) => {
       profileImageUrl,
     });
 
-    // return user data witjh JWT
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -41,9 +38,11 @@ const registerUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (error) {
-    res.status(500).json({ message: "server error", error: error.essage });
+    console.log("REGISTER ERROR:", error); // 👈 Add this
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 // / @desc login useer
 // @route POST /api/auth/login
@@ -52,17 +51,17 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(500).json({ message: "Invali email or password" });
-    }
-    // compare Password
-    const isMatch = await bcrypt.compare(passsword, user.passsword);
-    if (!isMatch) {
-      return res.status(500).json({ message: "invalid email or password" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // return user data with JWT_SECRET
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
     res.json({
       _id: user._id,
       name: user.name,
@@ -71,7 +70,7 @@ const loginUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (error) {
-    res.status(500).json({ message: "server error", error: error.essage });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -81,7 +80,7 @@ const loginUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
-    const user=await user.findById(req.user.id).select("-password")
+    const user = await User.findById(req.user.id).select("-password");
     if(!user){
         return res.status(404).json({message:"user not found"})
     }
